@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro Kanban Interativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .kanban-board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .column {
+            min-width: 300px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+
+        .column-header {
+            padding: 15px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .column-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .column-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .column-actions button {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+
+        .cards-container {
+            padding: 10px;
+            flex-grow: 1;
+            overflow-y: auto;
+            min-height: 200px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: move;
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1rem;
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .card-actions button {
+            padding: 3px 6px;
+            font-size: 0.7rem;
+        }
+
+        .card-content {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .add-card-btn {
+            margin: 10px;
+            padding: 8px;
+            background-color: #ecf0f1;
+            border: 1px dashed #bdc3c7;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            color: #7f8c8d;
+            transition: all 0.2s;
+        }
+
+        .add-card-btn:hover {
+            background-color: #d5dbdb;
+        }
+
+        .add-column-btn {
+            min-width: 300px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            color: #7f8c8d;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .add-column-btn:hover {
+            background-color: #d5dbdb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-picker input {
+            width: 50px;
+            height: 40px;
+            padding: 0;
+            border: none;
+        }
+
+        .emoji-selector {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .emoji-option {
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .emoji-option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .drag-over {
+            background-color: #f0f8ff;
+            border: 2px dashed #3498db;
+        }
+
+        .card.dragging {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Quadro Kanban</h1>
+            <div class="controls">
+                <button class="btn-primary" id="exportBtn">Exportar JSON</button>
+                <button class="btn-success" id="importBtn">Importar JSON</button>
+                <input type="file" id="fileInput" class="file-input" accept=".json">
+            </div>
+        </header>
+
+        <div class="kanban-board" id="kanbanBoard">
+            <!-- Colunas serão adicionadas aqui dinamicamente -->
+        </div>
+
+        <div class="add-column-btn" id="addColumnBtn">
+            + Adicionar Nova Coluna
+        </div>
+    </div>
+
+    <!-- Modal para adicionar/editar coluna -->
+    <div class="modal" id="columnModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="columnModalTitle">Adicionar Coluna</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="columnForm">
+                <div class="form-group">
+                    <label for="columnTitle">Título da Coluna</label>
+                    <input type="text" id="columnTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="columnEmoji">Emoji</label>
+                    <input type="text" id="columnEmoji" placeholder="Ex: 📝" maxlength="2">
+                    <div class="emoji-selector">
+                        <span class="emoji-option" data-emoji="📝">📝</span>
+                        <span class="emoji-option" data-emoji="📋">📋</span>
+                        <span class="emoji-option" data-emoji="✅">✅</span>
+                        <span class="emoji-option" data-emoji="🚀">🚀</span>
+                        <span class="emoji-option" data-emoji="🔧">🔧</span>
+                        <span class="emoji-option" data-emoji="🎯">🎯</span>
+                        <span class="emoji-option" data-emoji="📊">📊</span>
+                        <span class="emoji-option" data-emoji="💡">💡</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="columnColor">Cor da Coluna</label>
+                    <div class="color-picker">
+                        <input type="color" id="columnColor" value="#3498db">
+                        <span id="columnColorValue">#3498db</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar/editar card -->
+    <div class="modal" id="cardModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="cardModalTitle">Adicionar Card</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="cardForm">
+                <div class="form-group">
+                    <label for="cardTitle">Título do Card</label>
+                    <input type="text" id="cardTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="cardContent">Conteúdo</label>
+                    <textarea id="cardContent"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cardEmoji">Emoji</label>
+                    <input type="text" id="cardEmoji" placeholder="Ex: 🔥" maxlength="2">
+                    <div class="emoji-selector">
+                        <span class="emoji-option" data-emoji="🔥">🔥</span>
+                        <span class="emoji-option" data-emoji="⭐">⭐</span>
+                        <span class="emoji-option" data-emoji="💎">💎</span>
+                        <span class="emoji-option" data-emoji="🚩">🚩</span>
+                        <span class="emoji-option" data-emoji="📌">📌</span>
+                        <span class="emoji-option" data-emoji="🔔">🔔</span>
+                        <span class="emoji-option" data-emoji="💬">💬</span>
+                        <span class="emoji-option" data-emoji="📎">📎</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cardColor">Cor do Card</label>
+                    <div class="color-picker">
+                        <input type="color" id="cardColor" value="#ffffff">
+                        <span id="cardColorValue">#ffffff</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Estado do aplicativo
+        const state = {
+            columns: [],
+            currentColumnId: null,
+            currentCardId: null,
+            editingColumn: false,
+            editingCard: false
+        };
+
+        // Elementos DOM
+        const kanbanBoard = document.getElementById('kanbanBoard');
+        const addColumnBtn = document.getElementById('addColumnBtn');
+        const columnModal = document.getElementById('columnModal');
+        const cardModal = document.getElementById('cardModal');
+        const columnForm = document.getElementById('columnForm');
+        const cardForm = document.getElementById('cardForm');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', initApp);
+        addColumnBtn.addEventListener('click', openColumnModal);
+        columnForm.addEventListener('submit', saveColumn);
+        cardForm.addEventListener('submit', saveCard);
+        exportBtn.addEventListener('click', exportToJSON);
+        importBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', importFromJSON);
+
+        // Fechar modais ao clicar no X
+        document.querySelectorAll('.close-modal').forEach(button => {
+            button.addEventListener('click', () => {
+                columnModal.style.display = 'none';
+                cardModal.style.display = 'none';
+            });
+        });
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', (e) => {
+            if (e.target === columnModal) columnModal.style.display = 'none';
+            if (e.target === cardModal) cardModal.style.display = 'none';
+        });
+
+        // Inicializar aplicativo
+        function initApp() {
+            // Carregar dados do localStorage se existirem
+            const savedData = localStorage.getItem('kanbanData');
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    state.columns = parsedData.columns || [];
+                    renderBoard();
+                } catch (error) {
+                    console.error('Erro ao carregar dados salvos:', error);
+                }
+            }
+
+            // Se não houver dados, criar colunas padrão
+            if (state.columns.length === 0) {
+                createDefaultColumns();
+            }
+
+            // Configurar seletores de emoji
+            setupEmojiSelectors();
+            
+            // Configurar seletores de cor
+            setupColorPickers();
+        }
+
+        // Criar colunas padrão
+        function createDefaultColumns() {
+            state.columns = [
+                {
+                    id: generateId(),
+                    title: 'Para Fazer',
+                    emoji: '📝',
+                    color: '#3498db',
+                    cards: [
+                        { id: generateId(), title: 'Tarefa Exemplo', content: 'Esta é uma tarefa de exemplo', emoji: '⭐', color: '#ffffff' }
+                    ]
+                },
+                {
+                    id: generateId(),
+                    title: 'Fazendo',
+                    emoji: '🔧',
+                    color: '#f39c12',
+                    cards: []
+                },
+                {
+                    id: generateId(),
+                    title: 'Concluído',
+                    emoji: '✅',
+                    color: '#2ecc71',
+                    cards: []
+                }
+            ];
+            saveToLocalStorage();
+            renderBoard();
+        }
+
+        // Renderizar o quadro
+        function renderBoard() {
+            kanbanBoard.innerHTML = '';
+            
+            state.columns.forEach(column => {
+                const columnElement = createColumnElement(column);
+                kanbanBoard.appendChild(columnElement);
+            });
+        }
+
+        // Criar elemento de coluna
+        function createColumnElement(column) {
+            const columnElement = document.createElement('div');
+            columnElement.className = 'column';
+            columnElement.dataset.columnId = column.id;
+            
+            // Cabeçalho da coluna
+            const columnHeader = document.createElement('div');
+            columnHeader.className = 'column-header';
+            columnHeader.style.backgroundColor = column.color;
+            
+            const columnTitle = document.createElement('div');
+            columnTitle.className = 'column-title';
+            columnTitle.innerHTML = `${column.emoji} ${column.title}`;
+            
+            const columnActions = document.createElement('div');
+            columnActions.className = 'column-actions';
+            
+            const editButton = document.createElement('button');
+            editButton.className = 'btn-primary';
+            editButton.textContent = 'Editar';
+            editButton.addEventListener('click', () => openColumnModal(column.id));
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-danger';
+            deleteButton.textContent = 'Remover';
+            deleteButton.addEventListener('click', () => deleteColumn(column.id));
+            
+            columnActions.appendChild(editButton);
+            columnActions.appendChild(deleteButton);
+            columnHeader.appendChild(columnTitle);
+            columnHeader.appendChild(columnActions);
+            
+            // Container de cards
+            const cardsContainer = document.createElement('div');
+            cardsContainer.className = 'cards-container';
+            
+            // Adicionar funcionalidade de drag and drop
+            cardsContainer.addEventListener('dragover', handleDragOver);
+            cardsContainer.addEventListener('drop', (e) => handleDrop(e, column.id));
+            
+            // Adicionar cards
+            column.cards.forEach(card => {
+                const cardElement = createCardElement(card, column.id);
+                cardsContainer.appendChild(cardElement);
+            });
+            
+            // Botão para adicionar card
+            const addCardButton = document.createElement('div');
+            addCardButton.className = 'add-card-btn';
+            addCardButton.textContent = '+ Adicionar Card';
+            addCardButton.addEventListener('click', () => openCardModal(column.id));
+            
+            columnElement.appendChild(columnHeader);
+            columnElement.appendChild(cardsContainer);
+            columnElement.appendChild(addCardButton);
+            
+            return columnElement;
+        }
+
+        // Criar elemento de card
+        function createCardElement(card, columnId) {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.draggable = true;
+            cardElement.dataset.cardId = card.id;
+            cardElement.dataset.columnId = columnId;
+            cardElement.style.backgroundColor = card.color;
+            
+            // Configurar eventos de drag and drop
+            cardElement.addEventListener('dragstart', handleDragStart);
+            cardElement.addEventListener('dragend', handleDragEnd);
+            
+            // Cabeçalho do card
+            const cardHeader = document.createElement('div');
+            cardHeader.className = 'card-header';
+            
+            const cardTitle = document.createElement('div');
+            cardTitle.className = 'card-title';
+            cardTitle.innerHTML = `${card.emoji} ${card.title}`;
+            
+            const cardActions = document.createElement('div');
+            cardActions.className = 'card-actions';
+            
+            const editButton = document.createElement('button');
+            editButton.className = 'btn-primary';
+            editButton.textContent = 'Editar';
+            editButton.addEventListener('click', () => openCardModal(columnId, card.id));
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-danger';
+            deleteButton.textContent = 'Remover';
+            deleteButton.addEventListener('click', () => deleteCard(columnId, card.id));
+            
+            cardActions.appendChild(editButton);
+            cardActions.appendChild(deleteButton);
+            cardHeader.appendChild(cardTitle);
+            cardHeader.appendChild(cardActions);
+            
+            // Conteúdo do card
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+            cardContent.textContent = card.content;
+            
+            cardElement.appendChild(cardHeader);
+            cardElement.appendChild(cardContent);
+            
+            return cardElement;
+        }
+
+        // Abrir modal de coluna
+        function openColumnModal(columnId = null) {
+            const modalTitle = document.getElementById('columnModalTitle');
+            const titleInput = document.getElementById('columnTitle');
+            const emojiInput = document.getElementById('columnEmoji');
+            const colorInput = document.getElementById('columnColor');
+            
+            if (columnId) {
+                // Modo edição
+                state.editingColumn = true;
+                state.currentColumnId = columnId;
+                modalTitle.textContent = 'Editar Coluna';
+                
+                const column = state.columns.find(col => col.id === columnId);
+                if (column) {
+                    titleInput.value = column.title;
+                    emojiInput.value = column.emoji;
+                    colorInput.value = column.color;
+                    document.getElementById('columnColorValue').textContent = column.color;
+                }
+            } else {
+                // Modo adição
+                state.editingColumn = false;
+                modalTitle.textContent = 'Adicionar Coluna';
+                titleInput.value = '';
+                emojiInput.value = '';
+                colorInput.value = '#3498db';
+                document.getElementById('columnColorValue').textContent = '#3498db';
+            }
+            
+            columnModal.style.display = 'flex';
+        }
+
+        // Salvar coluna
+        function saveColumn(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('columnTitle').value.trim();
+            const emoji = document.getElementById('columnEmoji').value.trim();
+            const color = document.getElementById('columnColor').value;
+            
+            if (!title) {
+                alert('Por favor, insira um título para a coluna.');
+                return;
+            }
+            
+            if (state.editingColumn) {
+                // Atualizar coluna existente
+                const columnIndex = state.columns.findIndex(col => col.id === state.currentColumnId);
+                if (columnIndex !== -1) {
+                    state.columns[columnIndex].title = title;
+                    state.columns[columnIndex].emoji = emoji;
+                    state.columns[columnIndex].color = color;
+                }
+            } else {
+                // Adicionar nova coluna
+                const newColumn = {
+                    id: generateId(),
+                    title,
+                    emoji,
+                    color,
+                    cards: []
+                };
+                state.columns.push(newColumn);
+            }
+            
+            saveToLocalStorage();
+            renderBoard();
+            columnModal.style.display = 'none';
+        }
+
+        // Abrir modal de card
+        function openCardModal(columnId, cardId = null) {
+            const modalTitle = document.getElementById('cardModalTitle');
+            const titleInput = document.getElementById('cardTitle');
+            const contentInput = document.getElementById('cardContent');
+            const emojiInput = document.getElementById('cardEmoji');
+            const colorInput = document.getElementById('cardColor');
+            
+            state.currentColumnId = columnId;
+            
+            if (cardId) {
+                // Modo edição
+                state.editingCard = true;
+                state.currentCardId = cardId;
+                modalTitle.textContent = 'Editar Card';
+                
+                const column = state.columns.find(col => col.id === columnId);
+                if (column) {
+                    const card = column.cards.find(c => c.id === cardId);
+                    if (card) {
+                        titleInput.value = card.title;
+                        contentInput.value = card.content;
+                        emojiInput.value = card.emoji;
+                        colorInput.value = card.color;
+                        document.getElementById('cardColorValue').textContent = card.color;
+                    }
+                }
+            } else {
+                // Modo adição
+                state.editingCard = false;
+                modalTitle.textContent = 'Adicionar Card';
+                titleInput.value = '';
+                contentInput.value = '';
+                emojiInput.value = '';
+                colorInput.value = '#ffffff';
+                document.getElementById('cardColorValue').textContent = '#ffffff';
+            }
+            
+            cardModal.style.display = 'flex';
+        }
+
+        // Salvar card
+        function saveCard(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('cardTitle').value.trim();
+            const content = document.getElementById('cardContent').value.trim();
+            const emoji = document.getElementById('cardEmoji').value.trim();
+            const color = document.getElementById('cardColor').value;
+            
+            if (!title) {
+                alert('Por favor, insira um título para o card.');
+                return;
+            }
+            
+            const columnIndex = state.columns.findIndex(col => col.id === state.currentColumnId);
+            if (columnIndex === -1) return;
+            
+            if (state.editingCard) {
+                // Atualizar card existente
+                const cardIndex = state.columns[columnIndex].cards.findIndex(card => card.id === state.currentCardId);
+                if (cardIndex !== -1) {
+                    state.columns[columnIndex].cards[cardIndex].title = title;
+                    state.columns[columnIndex].cards[cardIndex].content = content;
+                    state.columns[columnIndex].cards[cardIndex].emoji = emoji;
+                    state.columns[columnIndex].cards[cardIndex].color = color;
+                }
+            } else {
+                // Adicionar novo card
+                const newCard = {
+                    id: generateId(),
+                    title,
+                    content,
+                    emoji,
+                    color
+                };
+                state.columns[columnIndex].cards.push(newCard);
+            }
+            
+            saveToLocalStorage();
+            renderBoard();
+            cardModal.style.display = 'none';
+        }
+
+        // Excluir coluna
+        function deleteColumn(columnId) {
+            if (confirm('Tem certeza que deseja excluir esta coluna? Todos os cards serão removidos.')) {
+                state.columns = state.columns.filter(col => col.id !== columnId);
+                saveToLocalStorage();
+                renderBoard();
+            }
+        }
+
+        // Excluir card
+        function deleteCard(columnId, cardId) {
+            if (confirm('Tem certeza que deseja excluir este card?')) {
+                const columnIndex = state.columns.findIndex(col => col.id === columnId);
+                if (columnIndex !== -1) {
+                    state.columns[columnIndex].cards = state.columns[columnIndex].cards.filter(card => card.id !== cardId);
+                    saveToLocalStorage();
+                    renderBoard();
+                }
+            }
+        }
+
+        // Configurar seletores de emoji
+        function setupEmojiSelectors() {
+            document.querySelectorAll('.emoji-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const emoji = this.getAttribute('data-emoji');
+                    const modal = this.closest('.modal-content');
+                    const emojiInput = modal.querySelector('input[type="text"]');
+                    emojiInput.value = emoji;
+                });
+            });
+        }
+
+        // Configurar seletores de cor
+        function setupColorPickers() {
+            const columnColorInput = document.getElementById('columnColor');
+            const columnColorValue = document.getElementById('columnColorValue');
+            
+            columnColorInput.addEventListener('input', function() {
+                columnColorValue.textContent = this.value;
+            });
+            
+            const cardColorInput = document.getElementById('cardColor');
+            const cardColorValue = document.getElementById('cardColorValue');
+            
+            cardColorInput.addEventListener('input', function() {
+                cardColorValue.textContent = this.value;
+            });
+        }
+
+        // Funcionalidade de Drag and Drop
+        let draggedCard = null;
+
+        function handleDragStart(e) {
+            draggedCard = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.cardId);
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            draggedCard = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('drag-over');
+        }
+
+        function handleDrop(e, targetColumnId) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (!draggedCard) return;
+            
+            const cardId = draggedCard.dataset.cardId;
+            const sourceColumnId = draggedCard.dataset.columnId;
+            
+            // Mover card entre colunas
+            if (sourceColumnId !== targetColumnId) {
+                moveCardBetweenColumns(cardId, sourceColumnId, targetColumnId);
+            }
+        }
+
+        // Mover card entre colunas
+        function moveCardBetweenColumns(cardId, sourceColumnId, targetColumnId) {
+            const sourceColumnIndex = state.columns.findIndex(col => col.id === sourceColumnId);
+            const targetColumnIndex = state.columns.findIndex(col => col.id === targetColumnId);
+            
+            if (sourceColumnIndex === -1 || targetColumnIndex === -1) return;
+            
+            const cardIndex = state.columns[sourceColumnIndex].cards.findIndex(card => card.id === cardId);
+            if (cardIndex === -1) return;
+            
+            const card = state.columns[sourceColumnIndex].cards[cardIndex];
+            state.columns[sourceColumnIndex].cards.splice(cardIndex, 1);
+            state.columns[targetColumnIndex].cards.push(card);
+            
+            saveToLocalStorage();
+            renderBoard();
+        }
+
+        // Exportar para JSON
+        function exportToJSON() {
+            const dataStr = JSON.stringify(state, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'kanban-data.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // Importar de JSON
+        function importFromJSON(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validar estrutura básica
+                    if (importedData && Array.isArray(importedData.columns)) {
+                        state.columns = importedData.columns;
+                        saveToLocalStorage();
+                        renderBoard();
+                        alert('Dados importados com sucesso!');
+                    } else {
+                        alert('Arquivo JSON inválido. Certifique-se de que é um arquivo de exportação do Kanban.');
+                    }
+                } catch (error) {
+                    alert('Erro ao importar arquivo. Certifique-se de que é um arquivo JSON válido.');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Limpar input para permitir importar o mesmo arquivo novamente
+            e.target.value = '';
+        }
+
+        // Salvar no localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('kanbanData', JSON.stringify(state));
+        }
+
+        // Gerar ID único
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+    </script>
+</body>
+</html>
