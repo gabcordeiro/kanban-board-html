@@ -13,9 +13,10 @@
         }
 
         body {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
             color: #333;
+            min-height: 100vh;
         }
 
         .container {
@@ -27,180 +28,234 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
         }
 
         h1 {
             color: #2c3e50;
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         button {
-            padding: 8px 15px;
+            padding: 10px 18px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn-primary {
-            background-color: #3498db;
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
 
         .btn-primary:hover {
-            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
 
         .btn-success {
-            background-color: #2ecc71;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
             color: white;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
         }
 
         .btn-success:hover {
-            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
         }
 
         .btn-danger {
-            background-color: #e74c3c;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
         }
 
         .btn-danger:hover {
-            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
         }
 
         .kanban-board {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             overflow-x: auto;
-            padding: 10px 0;
+            padding: 15px 5px;
+            min-height: 600px;
         }
 
         .column {
-            min-width: 300px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            min-width: 320px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
             max-height: 80vh;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .column:hover {
+            transform: translateY(-5px);
         }
 
         .column-header {
-            padding: 15px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+            padding: 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
 
         .column-title {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
         .column-actions {
             display: flex;
-            gap: 5px;
+            gap: 8px;
         }
 
         .column-actions button {
-            padding: 4px 8px;
-            font-size: 0.8rem;
+            padding: 6px 12px;
+            font-size: 0.85rem;
         }
 
         .cards-container {
-            padding: 10px;
+            padding: 15px;
             flex-grow: 1;
             overflow-y: auto;
             min-height: 200px;
+            transition: background-color 0.3s;
+        }
+
+        .cards-container.drag-over {
+            background-color: rgba(102, 126, 234, 0.1);
+            border: 2px dashed #667eea;
+            border-radius: 8px;
         }
 
         .card {
             background-color: #fff;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            cursor: move;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: grab;
             position: relative;
+            transition: all 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .card.dragging {
+            opacity: 0.6;
+            transform: rotate(5deg);
+            cursor: grabbing;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .card-title {
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.1rem;
             flex-grow: 1;
             margin-right: 10px;
+            color: #2c3e50;
         }
 
         .card-actions {
             display: flex;
-            gap: 5px;
+            gap: 6px;
         }
 
         .card-actions button {
-            padding: 3px 6px;
-            font-size: 0.7rem;
+            padding: 4px 8px;
+            font-size: 0.75rem;
         }
 
         .card-content {
-            font-size: 0.9rem;
-            line-height: 1.4;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #555;
         }
 
         .add-card-btn {
-            margin: 10px;
-            padding: 8px;
-            background-color: #ecf0f1;
-            border: 1px dashed #bdc3c7;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            color: #7f8c8d;
-            transition: all 0.2s;
-        }
-
-        .add-card-btn:hover {
-            background-color: #d5dbdb;
-        }
-
-        .add-column-btn {
-            min-width: 300px;
-            padding: 20px;
-            background-color: #ecf0f1;
-            border: 2px dashed #bdc3c7;
+            margin: 15px;
+            padding: 12px;
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+            border: 2px dashed #95a5a6;
             border-radius: 8px;
             cursor: pointer;
             text-align: center;
             color: #7f8c8d;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .add-card-btn:hover {
+            background: linear-gradient(135deg, #d5dbdb, #a6acaf);
+            transform: translateY(-2px);
+        }
+
+        .add-column-btn {
+            min-width: 320px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(236, 240, 241, 0.8));
+            border: 3px dashed #bdc3c7;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            color: #7f8c8d;
             font-weight: bold;
-            transition: all 0.2s;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
         }
 
         .add-column-btn:hover {
-            background-color: #d5dbdb;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(213, 219, 219, 0.9));
+            transform: translateY(-3px);
+            border-color: #95a5a6;
         }
 
         .modal {
@@ -210,119 +265,176 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.6);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            padding: 30px;
+            border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
         }
 
         .modal-title {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
+            color: #2c3e50;
         }
 
         .close-modal {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             color: #7f8c8d;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #e74c3c;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 600;
+            color: #2c3e50;
         }
 
         input, textarea, select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         textarea {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
         }
 
         .color-picker {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
         }
 
         .color-picker input {
-            width: 50px;
-            height: 40px;
+            width: 60px;
+            height: 50px;
             padding: 0;
             border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         .emoji-selector {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
         .emoji-option {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            background: #f8f9fa;
         }
 
         .emoji-option:hover {
-            background-color: #f0f0f0;
+            background: #3498db;
+            transform: scale(1.1);
         }
 
         .file-input {
             display: none;
         }
 
-        .drag-over {
-            background-color: #f0f8ff;
-            border: 2px dashed #3498db;
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
         }
 
-        .card.dragging {
-            opacity: 0.5;
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📋 Quadro Kanban</h1>
+            <h1>📋 Quadro Kanban Interativo</h1>
             <div class="controls">
-                <button class="btn-primary" id="exportBtn">Exportar JSON</button>
-                <button class="btn-success" id="importBtn">Importar JSON</button>
+                <button class="btn-primary" id="exportBtn">
+                    <span>💾</span> Exportar JSON
+                </button>
+                <button class="btn-success" id="importBtn">
+                    <span>📥</span> Importar JSON
+                </button>
                 <input type="file" id="fileInput" class="file-input" accept=".json">
             </div>
         </header>
@@ -332,7 +444,7 @@
         </div>
 
         <div class="add-column-btn" id="addColumnBtn">
-            + Adicionar Nova Coluna
+            <span>➕</span> Adicionar Nova Coluna
         </div>
     </div>
 
@@ -346,7 +458,7 @@
             <form id="columnForm">
                 <div class="form-group">
                     <label for="columnTitle">Título da Coluna</label>
-                    <input type="text" id="columnTitle" required>
+                    <input type="text" id="columnTitle" required placeholder="Ex: Para Fazer">
                 </div>
                 <div class="form-group">
                     <label for="columnEmoji">Emoji</label>
@@ -370,7 +482,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn-primary">Salvar</button>
+                    <button type="submit" class="btn-primary">Salvar Coluna</button>
                 </div>
             </form>
         </div>
@@ -386,11 +498,11 @@
             <form id="cardForm">
                 <div class="form-group">
                     <label for="cardTitle">Título do Card</label>
-                    <input type="text" id="cardTitle" required>
+                    <input type="text" id="cardTitle" required placeholder="Ex: Implementar funcionalidade X">
                 </div>
                 <div class="form-group">
-                    <label for="cardContent">Conteúdo</label>
-                    <textarea id="cardContent"></textarea>
+                    <label for="cardContent">Descrição</label>
+                    <textarea id="cardContent" placeholder="Descreva os detalhes da tarefa..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="cardEmoji">Emoji</label>
@@ -414,7 +526,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn-primary">Salvar</button>
+                    <button type="submit" class="btn-primary">Salvar Card</button>
                 </div>
             </form>
         </div>
@@ -441,56 +553,53 @@
         const importBtn = document.getElementById('importBtn');
         const fileInput = document.getElementById('fileInput');
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', initApp);
-        addColumnBtn.addEventListener('click', openColumnModal);
-        columnForm.addEventListener('submit', saveColumn);
-        cardForm.addEventListener('submit', saveCard);
-        exportBtn.addEventListener('click', exportToJSON);
-        importBtn.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', importFromJSON);
-
-        // Fechar modais ao clicar no X
-        document.querySelectorAll('.close-modal').forEach(button => {
-            button.addEventListener('click', () => {
-                columnModal.style.display = 'none';
-                cardModal.style.display = 'none';
-            });
-        });
-
-        // Fechar modais ao clicar fora
-        window.addEventListener('click', (e) => {
-            if (e.target === columnModal) columnModal.style.display = 'none';
-            if (e.target === cardModal) cardModal.style.display = 'none';
-        });
-
         // Inicializar aplicativo
-        function initApp() {
-            // Carregar dados do localStorage se existirem
-            const savedData = localStorage.getItem('kanbanData');
-            if (savedData) {
-                try {
-                    const parsedData = JSON.parse(savedData);
-                    state.columns = parsedData.columns || [];
-                    renderBoard();
-                } catch (error) {
-                    console.error('Erro ao carregar dados salvos:', error);
-                }
-            }
+        document.addEventListener('DOMContentLoaded', initApp);
 
-            // Se não houver dados, criar colunas padrão
-            if (state.columns.length === 0) {
-                createDefaultColumns();
-            }
+        function initApp() {
+            // Configurar event listeners
+            addColumnBtn.addEventListener('click', () => openColumnModal());
+            columnForm.addEventListener('submit', saveColumn);
+            cardForm.addEventListener('submit', saveCard);
+            exportBtn.addEventListener('click', exportToJSON);
+            importBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', importFromJSON);
+
+            // Fechar modais
+            document.querySelectorAll('.close-modal').forEach(button => {
+                button.addEventListener('click', closeModals);
+            });
+
+            // Fechar modais ao clicar fora
+            window.addEventListener('click', (e) => {
+                if (e.target === columnModal || e.target === cardModal) {
+                    closeModals();
+                }
+            });
 
             // Configurar seletores de emoji
             setupEmojiSelectors();
             
             // Configurar seletores de cor
             setupColorPickers();
+
+            // Carregar dados salvos
+            const savedData = localStorage.getItem('kanbanData');
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    state.columns = parsedData.columns || [];
+                } catch (error) {
+                    console.error('Erro ao carregar dados:', error);
+                    createDefaultColumns();
+                }
+            } else {
+                createDefaultColumns();
+            }
+
+            renderBoard();
         }
 
-        // Criar colunas padrão
         function createDefaultColumns() {
             state.columns = [
                 {
@@ -499,12 +608,18 @@
                     emoji: '📝',
                     color: '#3498db',
                     cards: [
-                        { id: generateId(), title: 'Tarefa Exemplo', content: 'Esta é uma tarefa de exemplo', emoji: '⭐', color: '#ffffff' }
+                        { 
+                            id: generateId(), 
+                            title: 'Bem-vindo ao Kanban!', 
+                            content: 'Arraste este card entre as colunas para testar o recurso de drag & drop.', 
+                            emoji: '👋', 
+                            color: '#ffffff' 
+                        }
                     ]
                 },
                 {
                     id: generateId(),
-                    title: 'Fazendo',
+                    title: 'Em Progresso',
                     emoji: '🔧',
                     color: '#f39c12',
                     cards: []
@@ -518,12 +633,22 @@
                 }
             ];
             saveToLocalStorage();
-            renderBoard();
         }
 
-        // Renderizar o quadro
         function renderBoard() {
             kanbanBoard.innerHTML = '';
+            
+            if (state.columns.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <div>📋</div>
+                    <h3>Nenhuma coluna criada</h3>
+                    <p>Clique no botão abaixo para adicionar sua primeira coluna!</p>
+                `;
+                kanbanBoard.appendChild(emptyState);
+                return;
+            }
             
             state.columns.forEach(column => {
                 const columnElement = createColumnElement(column);
@@ -531,7 +656,6 @@
             });
         }
 
-        // Criar elemento de coluna
         function createColumnElement(column) {
             const columnElement = document.createElement('div');
             columnElement.className = 'column';
@@ -540,7 +664,7 @@
             // Cabeçalho da coluna
             const columnHeader = document.createElement('div');
             columnHeader.className = 'column-header';
-            columnHeader.style.backgroundColor = column.color;
+            columnHeader.style.background = `linear-gradient(135deg, ${column.color}, ${darkenColor(column.color, 20)})`;
             
             const columnTitle = document.createElement('div');
             columnTitle.className = 'column-title';
@@ -551,13 +675,19 @@
             
             const editButton = document.createElement('button');
             editButton.className = 'btn-primary';
-            editButton.textContent = 'Editar';
-            editButton.addEventListener('click', () => openColumnModal(column.id));
+            editButton.innerHTML = '✏️ Editar';
+            editButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openColumnModal(column.id);
+            });
             
             const deleteButton = document.createElement('button');
             deleteButton.className = 'btn-danger';
-            deleteButton.textContent = 'Remover';
-            deleteButton.addEventListener('click', () => deleteColumn(column.id));
+            deleteButton.innerHTML = '🗑️ Remover';
+            deleteButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteColumn(column.id);
+            });
             
             columnActions.appendChild(editButton);
             columnActions.appendChild(deleteButton);
@@ -567,21 +697,33 @@
             // Container de cards
             const cardsContainer = document.createElement('div');
             cardsContainer.className = 'cards-container';
+            cardsContainer.dataset.columnId = column.id;
             
-            // Adicionar funcionalidade de drag and drop
+            // Eventos de drag and drop
             cardsContainer.addEventListener('dragover', handleDragOver);
-            cardsContainer.addEventListener('drop', (e) => handleDrop(e, column.id));
+            cardsContainer.addEventListener('dragleave', handleDragLeave);
+            cardsContainer.addEventListener('drop', handleDrop);
             
             // Adicionar cards
-            column.cards.forEach(card => {
-                const cardElement = createCardElement(card, column.id);
-                cardsContainer.appendChild(cardElement);
-            });
+            if (column.cards.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <div>📄</div>
+                    <p>Nenhum card nesta coluna</p>
+                `;
+                cardsContainer.appendChild(emptyState);
+            } else {
+                column.cards.forEach(card => {
+                    const cardElement = createCardElement(card, column.id);
+                    cardsContainer.appendChild(cardElement);
+                });
+            }
             
             // Botão para adicionar card
             const addCardButton = document.createElement('div');
             addCardButton.className = 'add-card-btn';
-            addCardButton.textContent = '+ Adicionar Card';
+            addCardButton.innerHTML = '+ Adicionar Card';
             addCardButton.addEventListener('click', () => openCardModal(column.id));
             
             columnElement.appendChild(columnHeader);
@@ -591,7 +733,6 @@
             return columnElement;
         }
 
-        // Criar elemento de card
         function createCardElement(card, columnId) {
             const cardElement = document.createElement('div');
             cardElement.className = 'card';
@@ -599,8 +740,9 @@
             cardElement.dataset.cardId = card.id;
             cardElement.dataset.columnId = columnId;
             cardElement.style.backgroundColor = card.color;
+            cardElement.style.borderLeftColor = darkenColor(card.color, 30);
             
-            // Configurar eventos de drag and drop
+            // Eventos de drag and drop
             cardElement.addEventListener('dragstart', handleDragStart);
             cardElement.addEventListener('dragend', handleDragEnd);
             
@@ -617,13 +759,21 @@
             
             const editButton = document.createElement('button');
             editButton.className = 'btn-primary';
-            editButton.textContent = 'Editar';
-            editButton.addEventListener('click', () => openCardModal(columnId, card.id));
+            editButton.innerHTML = '✏️';
+            editButton.title = 'Editar card';
+            editButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openCardModal(columnId, card.id);
+            });
             
             const deleteButton = document.createElement('button');
             deleteButton.className = 'btn-danger';
-            deleteButton.textContent = 'Remover';
-            deleteButton.addEventListener('click', () => deleteCard(columnId, card.id));
+            deleteButton.innerHTML = '🗑️';
+            deleteButton.title = 'Excluir card';
+            deleteButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteCard(columnId, card.id);
+            });
             
             cardActions.appendChild(editButton);
             cardActions.appendChild(deleteButton);
@@ -641,7 +791,68 @@
             return cardElement;
         }
 
-        // Abrir modal de coluna
+        // DRAG AND DROP
+        let draggedCard = null;
+
+        function handleDragStart(e) {
+            draggedCard = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.cardId);
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.cards-container').forEach(container => {
+                container.classList.remove('drag-over');
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            if (!this.contains(e.relatedTarget)) {
+                this.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (!draggedCard) return;
+            
+            const cardId = draggedCard.dataset.cardId;
+            const sourceColumnId = draggedCard.dataset.columnId;
+            const targetColumnId = this.dataset.columnId;
+            
+            if (sourceColumnId !== targetColumnId) {
+                moveCardBetweenColumns(cardId, sourceColumnId, targetColumnId);
+            }
+        }
+
+        function moveCardBetweenColumns(cardId, sourceColumnId, targetColumnId) {
+            const sourceColumn = state.columns.find(col => col.id === sourceColumnId);
+            const targetColumn = state.columns.find(col => col.id === targetColumnId);
+            
+            if (!sourceColumn || !targetColumn) return;
+            
+            const cardIndex = sourceColumn.cards.findIndex(card => card.id === cardId);
+            if (cardIndex === -1) return;
+            
+            const card = sourceColumn.cards[cardIndex];
+            sourceColumn.cards.splice(cardIndex, 1);
+            targetColumn.cards.push(card);
+            
+            saveToLocalStorage();
+            renderBoard();
+        }
+
+        // MODAIS
         function openColumnModal(columnId = null) {
             const modalTitle = document.getElementById('columnModalTitle');
             const titleInput = document.getElementById('columnTitle');
@@ -649,7 +860,6 @@
             const colorInput = document.getElementById('columnColor');
             
             if (columnId) {
-                // Modo edição
                 state.editingColumn = true;
                 state.currentColumnId = columnId;
                 modalTitle.textContent = 'Editar Coluna';
@@ -662,7 +872,6 @@
                     document.getElementById('columnColorValue').textContent = column.color;
                 }
             } else {
-                // Modo adição
                 state.editingColumn = false;
                 modalTitle.textContent = 'Adicionar Coluna';
                 titleInput.value = '';
@@ -672,47 +881,9 @@
             }
             
             columnModal.style.display = 'flex';
+            titleInput.focus();
         }
 
-        // Salvar coluna
-        function saveColumn(e) {
-            e.preventDefault();
-            
-            const title = document.getElementById('columnTitle').value.trim();
-            const emoji = document.getElementById('columnEmoji').value.trim();
-            const color = document.getElementById('columnColor').value;
-            
-            if (!title) {
-                alert('Por favor, insira um título para a coluna.');
-                return;
-            }
-            
-            if (state.editingColumn) {
-                // Atualizar coluna existente
-                const columnIndex = state.columns.findIndex(col => col.id === state.currentColumnId);
-                if (columnIndex !== -1) {
-                    state.columns[columnIndex].title = title;
-                    state.columns[columnIndex].emoji = emoji;
-                    state.columns[columnIndex].color = color;
-                }
-            } else {
-                // Adicionar nova coluna
-                const newColumn = {
-                    id: generateId(),
-                    title,
-                    emoji,
-                    color,
-                    cards: []
-                };
-                state.columns.push(newColumn);
-            }
-            
-            saveToLocalStorage();
-            renderBoard();
-            columnModal.style.display = 'none';
-        }
-
-        // Abrir modal de card
         function openCardModal(columnId, cardId = null) {
             const modalTitle = document.getElementById('cardModalTitle');
             const titleInput = document.getElementById('cardTitle');
@@ -723,7 +894,6 @@
             state.currentColumnId = columnId;
             
             if (cardId) {
-                // Modo edição
                 state.editingCard = true;
                 state.currentCardId = cardId;
                 modalTitle.textContent = 'Editar Card';
@@ -740,7 +910,6 @@
                     }
                 }
             } else {
-                // Modo adição
                 state.editingCard = false;
                 modalTitle.textContent = 'Adicionar Card';
                 titleInput.value = '';
@@ -751,15 +920,55 @@
             }
             
             cardModal.style.display = 'flex';
+            titleInput.focus();
         }
 
-        // Salvar card
+        function closeModals() {
+            columnModal.style.display = 'none';
+            cardModal.style.display = 'none';
+        }
+
+        function saveColumn(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('columnTitle').value.trim();
+            const emoji = document.getElementById('columnEmoji').value.trim() || '📋';
+            const color = document.getElementById('columnColor').value;
+            
+            if (!title) {
+                alert('Por favor, insira um título para a coluna.');
+                return;
+            }
+            
+            if (state.editingColumn) {
+                const column = state.columns.find(col => col.id === state.currentColumnId);
+                if (column) {
+                    column.title = title;
+                    column.emoji = emoji;
+                    column.color = color;
+                }
+            } else {
+                const newColumn = {
+                    id: generateId(),
+                    title,
+                    emoji,
+                    color,
+                    cards: []
+                };
+                state.columns.push(newColumn);
+            }
+            
+            saveToLocalStorage();
+            renderBoard();
+            closeModals();
+        }
+
         function saveCard(e) {
             e.preventDefault();
             
             const title = document.getElementById('cardTitle').value.trim();
             const content = document.getElementById('cardContent').value.trim();
-            const emoji = document.getElementById('cardEmoji').value.trim();
+            const emoji = document.getElementById('cardEmoji').value.trim() || '📄';
             const color = document.getElementById('cardColor').value;
             
             if (!title) {
@@ -767,20 +976,18 @@
                 return;
             }
             
-            const columnIndex = state.columns.findIndex(col => col.id === state.currentColumnId);
-            if (columnIndex === -1) return;
+            const column = state.columns.find(col => col.id === state.currentColumnId);
+            if (!column) return;
             
             if (state.editingCard) {
-                // Atualizar card existente
-                const cardIndex = state.columns[columnIndex].cards.findIndex(card => card.id === state.currentCardId);
-                if (cardIndex !== -1) {
-                    state.columns[columnIndex].cards[cardIndex].title = title;
-                    state.columns[columnIndex].cards[cardIndex].content = content;
-                    state.columns[columnIndex].cards[cardIndex].emoji = emoji;
-                    state.columns[columnIndex].cards[cardIndex].color = color;
+                const card = column.cards.find(card => card.id === state.currentCardId);
+                if (card) {
+                    card.title = title;
+                    card.content = content;
+                    card.emoji = emoji;
+                    card.color = color;
                 }
             } else {
-                // Adicionar novo card
                 const newCard = {
                     id: generateId(),
                     title,
@@ -788,15 +995,14 @@
                     emoji,
                     color
                 };
-                state.columns[columnIndex].cards.push(newCard);
+                column.cards.push(newCard);
             }
             
             saveToLocalStorage();
             renderBoard();
-            cardModal.style.display = 'none';
+            closeModals();
         }
 
-        // Excluir coluna
         function deleteColumn(columnId) {
             if (confirm('Tem certeza que deseja excluir esta coluna? Todos os cards serão removidos.')) {
                 state.columns = state.columns.filter(col => col.id !== columnId);
@@ -805,19 +1011,18 @@
             }
         }
 
-        // Excluir card
         function deleteCard(columnId, cardId) {
             if (confirm('Tem certeza que deseja excluir este card?')) {
-                const columnIndex = state.columns.findIndex(col => col.id === columnId);
-                if (columnIndex !== -1) {
-                    state.columns[columnIndex].cards = state.columns[columnIndex].cards.filter(card => card.id !== cardId);
+                const column = state.columns.find(col => col.id === columnId);
+                if (column) {
+                    column.cards = column.cards.filter(card => card.id !== cardId);
                     saveToLocalStorage();
                     renderBoard();
                 }
             }
         }
 
-        // Configurar seletores de emoji
+        // UTILITÁRIOS
         function setupEmojiSelectors() {
             document.querySelectorAll('.emoji-option').forEach(option => {
                 option.addEventListener('click', function() {
@@ -829,7 +1034,6 @@
             });
         }
 
-        // Configurar seletores de cor
         function setupColorPickers() {
             const columnColorInput = document.getElementById('columnColor');
             const columnColorValue = document.getElementById('columnColorValue');
@@ -846,74 +1050,16 @@
             });
         }
 
-        // Funcionalidade de Drag and Drop
-        let draggedCard = null;
-
-        function handleDragStart(e) {
-            draggedCard = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', this.dataset.cardId);
-        }
-
-        function handleDragEnd() {
-            this.classList.remove('dragging');
-            draggedCard = null;
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            this.classList.add('drag-over');
-        }
-
-        function handleDrop(e, targetColumnId) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            
-            if (!draggedCard) return;
-            
-            const cardId = draggedCard.dataset.cardId;
-            const sourceColumnId = draggedCard.dataset.columnId;
-            
-            // Mover card entre colunas
-            if (sourceColumnId !== targetColumnId) {
-                moveCardBetweenColumns(cardId, sourceColumnId, targetColumnId);
-            }
-        }
-
-        // Mover card entre colunas
-        function moveCardBetweenColumns(cardId, sourceColumnId, targetColumnId) {
-            const sourceColumnIndex = state.columns.findIndex(col => col.id === sourceColumnId);
-            const targetColumnIndex = state.columns.findIndex(col => col.id === targetColumnId);
-            
-            if (sourceColumnIndex === -1 || targetColumnIndex === -1) return;
-            
-            const cardIndex = state.columns[sourceColumnIndex].cards.findIndex(card => card.id === cardId);
-            if (cardIndex === -1) return;
-            
-            const card = state.columns[sourceColumnIndex].cards[cardIndex];
-            state.columns[sourceColumnIndex].cards.splice(cardIndex, 1);
-            state.columns[targetColumnIndex].cards.push(card);
-            
-            saveToLocalStorage();
-            renderBoard();
-        }
-
-        // Exportar para JSON
         function exportToJSON() {
-            const dataStr = JSON.stringify(state, null, 2);
+            const dataStr = JSON.stringify({ columns: state.columns }, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = 'kanban-data.json';
             
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.setAttribute('download', 'kanban-board.json');
             linkElement.click();
         }
 
-        // Importar de JSON
         function importFromJSON(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -923,34 +1069,39 @@
                 try {
                     const importedData = JSON.parse(e.target.result);
                     
-                    // Validar estrutura básica
                     if (importedData && Array.isArray(importedData.columns)) {
                         state.columns = importedData.columns;
                         saveToLocalStorage();
                         renderBoard();
                         alert('Dados importados com sucesso!');
                     } else {
-                        alert('Arquivo JSON inválido. Certifique-se de que é um arquivo de exportação do Kanban.');
+                        alert('Arquivo JSON inválido.');
                     }
                 } catch (error) {
                     alert('Erro ao importar arquivo. Certifique-se de que é um arquivo JSON válido.');
-                    console.error(error);
                 }
             };
             reader.readAsText(file);
-            
-            // Limpar input para permitir importar o mesmo arquivo novamente
             e.target.value = '';
         }
 
-        // Salvar no localStorage
         function saveToLocalStorage() {
             localStorage.setItem('kanbanData', JSON.stringify(state));
         }
 
-        // Gerar ID único
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function darkenColor(color, percent) {
+            const num = parseInt(color.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) - amt;
+            const G = (num >> 8 & 0x00FF) - amt;
+            const B = (num & 0x0000FF) - amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
         }
     </script>
 </body>
